@@ -3,3 +3,6 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 export CUDA_HOME=/usr/local/cuda
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/cuda/lib64
 export CUDA_HOME=$CUDA_HOME:/usr/local/cuda
+
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
