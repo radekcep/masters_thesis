@@ -38,7 +38,7 @@ def newsgroups_data(subset, data_width, allowed_characters):
     res = []
 
     for article_index, article in enumerate(newsgroups.data):
-        if len(article) > data_width:
+        if len(article) < data_width:
             continue
         for index_of_subset_of_article in range(0, int(len(article) / data_width)):
             first_char_index  = index_of_subset_of_article * data_width
@@ -51,8 +51,7 @@ def newsgroups_data(subset, data_width, allowed_characters):
 
 
 # data = newsgroups_data(subset='train', data_width=256, allowed_characters=english_allowed_characters)
-# print(data[0].a_class)
-#
+# print(len(data))
 # import numpy as np
 # np.set_printoptions(threshold=np.nan, linewidth=200)
 # print(np.matrix(data[0].data))
