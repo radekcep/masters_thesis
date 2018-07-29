@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+
+import os
+import base64
+import json
 from sklearn.datasets import fetch_20newsgroups
 from collections import namedtuple
 
@@ -14,6 +19,30 @@ english_allowed_characters = [
     ']', '{', '}', '\\', '\''
 ]
 
+def category_id_for(category):
+    names_category_table = {
+        'comp.graphics': 0,
+        'comp.os.ms-windows.misc': 0,
+        'comp.sys.ibm.pc.hardware': 0,
+        'comp.sys.mac.hardware': 0,
+        'comp.windows.x': 0,
+        'rec.autos': 1,
+        'rec.motorcycles': 1,
+        'rec.sport.baseball': 1,
+        'rec.sport.hockey': 1,
+        'sci.crypt': 2,
+        'sci.electronics': 2,
+        'sci.med': 2,
+        'sci.space': 2,
+        'misc.forsale': 3,
+        'talk.politics.misc': 4,
+        'talk.politics.guns': 4,
+        'talk.politics.mideast': 4,
+        'talk.religion.misc': 5,
+        'alt.atheism': 5,
+        'soc.religion.christian': 5,
+    }
+    return names_category_table[category]
 
 def one_shot_of(char, allowed_characters):
     one_shot = [0] * len(allowed_characters)
@@ -34,9 +63,18 @@ def array_of_one_shots_from(text, allowed_characters):
 
 
 def newsgroups_data(subset, data_width, allowed_characters):
+    # filename = '/tmp/' + subset + '_' + str(data_width) + '_' + base64.urlsafe_b64encode(''.join(allowed_characters).encode('utf-8')).decode()
+    # print('Newsgroups data cache file: ' + filename)
+    #
+    # if os.path.isfile(filename):
+    #      with open(filename, 'r', encoding="utf8") as f:
+    #          print('Loading cached file...')
+    #          return json.load(f)
+
     newsgroups = fetch_20newsgroups(subset=subset, remove=('headers', 'footers', 'quotes'))
     res = []
 
+    print('Processing dataset...')
     for article_index, article in enumerate(newsgroups.data):
         if len(article) < data_width:
             continue
@@ -46,7 +84,13 @@ def newsgroups_data(subset, data_width, allowed_characters):
             subset_of_article = article[first_char_index:last_char_index]
             one_shots         = array_of_one_shots_from(subset_of_article, allowed_characters)
 
-            res.append(MLData(data=one_shots, a_class=newsgroups.target[article_index]))
+            category_name = newsgroups.target_names[newsgroups.target[article_index]]
+            res.append(MLData(data=[one_shots], a_class=category_id_for(category_name)))
+
+    # with open(filename, 'w', encoding="utf8") as f:
+    #      print('Saving cache file...')
+    #      json.dump(res, f)
+
     return res
 
 
