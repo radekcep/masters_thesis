@@ -58,7 +58,8 @@ def array_of_one_shots_from(text, allowed_characters):
     res = []
     for char in text:
         char = char.lower()
-        res.append(one_shot_of(char, allowed_characters))
+        one_shot = one_shot_of(char, allowed_characters)
+        res.append(one_shot)
     return res
 
 
