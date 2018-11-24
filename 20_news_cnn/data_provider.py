@@ -20,27 +20,50 @@ english_allowed_characters = [
 ]
 
 def category_id_for(category):
+    # names_category_table = {
+    #     'comp.graphics': 0,
+    #     'comp.os.ms-windows.misc': 0,
+    #     'comp.sys.ibm.pc.hardware': 0,
+    #     'comp.sys.mac.hardware': 0,
+    #     'comp.windows.x': 0,
+    #     'rec.autos': 1,
+    #     'rec.motorcycles': 1,
+    #     'rec.sport.baseball': 1,
+    #     'rec.sport.hockey': 1,
+    #     'sci.crypt': 2,
+    #     'sci.electronics': 2,
+    #     'sci.med': 2,
+    #     'sci.space': 2,
+    #     'misc.forsale': 3,
+    #     'talk.politics.misc': 4,
+    #     'talk.politics.guns': 4,
+    #     'talk.politics.mideast': 4,
+    #     'talk.religion.misc': 5,
+    #     'alt.atheism': 5,
+    #     'soc.religion.christian': 5,
+    # }
+
     names_category_table = {
         'comp.graphics': 0,
-        'comp.os.ms-windows.misc': 0,
-        'comp.sys.ibm.pc.hardware': 0,
-        'comp.sys.mac.hardware': 0,
-        'comp.windows.x': 0,
-        'rec.autos': 1,
-        'rec.motorcycles': 1,
-        'rec.sport.baseball': 1,
-        'rec.sport.hockey': 1,
-        'sci.crypt': 2,
-        'sci.electronics': 2,
-        'sci.med': 2,
-        'sci.space': 2,
-        'misc.forsale': 3,
-        'talk.politics.misc': 4,
-        'talk.politics.guns': 4,
-        'talk.politics.mideast': 4,
-        'talk.religion.misc': 5,
-        'alt.atheism': 5,
-        'soc.religion.christian': 5,
+        'comp.os.ms-windows.misc': 1,
+        'comp.sys.ibm.pc.hardware': 2,
+        'comp.sys.mac.hardware': 3,
+        'comp.windows.x': 4,
+        'rec.autos': 5,
+        'rec.motorcycles': 6,
+        'rec.sport.baseball': 7,
+        'rec.sport.hockey': 8,
+        'sci.crypt': 9,
+        'sci.electronics': 10,
+        'sci.med': 11,
+        'sci.space': 12,
+        'misc.forsale': 13,
+        'talk.politics.misc': 14,
+        'talk.politics.guns': 15,
+        'talk.politics.mideast': 16,
+        'talk.religion.misc': 17,
+        'alt.atheism': 18,
+        'soc.religion.christian': 19,
     }
     return names_category_table[category]
 
@@ -64,14 +87,6 @@ def array_of_one_shots_from(text, allowed_characters):
 
 
 def newsgroups_data(subset, data_width, allowed_characters):
-    # filename = '/tmp/' + subset + '_' + str(data_width) + '_' + base64.urlsafe_b64encode(''.join(allowed_characters).encode('utf-8')).decode()
-    # print('Newsgroups data cache file: ' + filename)
-    #
-    # if os.path.isfile(filename):
-    #      with open(filename, 'r', encoding="utf8") as f:
-    #          print('Loading cached file...')
-    #          return json.load(f)
-
     newsgroups = fetch_20newsgroups(subset=subset, remove=('headers', 'footers', 'quotes'))
     res = []
 
@@ -86,17 +101,6 @@ def newsgroups_data(subset, data_width, allowed_characters):
             one_shots         = array_of_one_shots_from(subset_of_article, allowed_characters)
 
             category_name = newsgroups.target_names[newsgroups.target[article_index]]
-            res.append(MLData(data=[one_shots], a_class=category_id_for(category_name)))
-
-    # with open(filename, 'w', encoding="utf8") as f:
-    #      print('Saving cache file...')
-    #      json.dump(res, f)
+            res.append(MLData(data=one_shots, a_class=category_id_for(category_name)))
 
     return res
-
-
-# data = newsgroups_data(subset='train', data_width=256, allowed_characters=english_allowed_characters)
-# print(len(data))
-# import numpy as np
-# np.set_printoptions(threshold=np.nan, linewidth=200)
-# print(np.matrix(data[0].data))
